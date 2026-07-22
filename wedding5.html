@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>The Wedding of Steve & Joice</title>
+  
+  <!-- Preconnect & Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* --------------------------------------------------
+       1. VARIABLES & RESET
+    -------------------------------------------------- */
+    :root {
+      --bg: #F5F2ED;
+      --text: #111111;
+      --accent: #A63D2F;
+      --surface: #EAE6DF;
+      --border: rgba(17, 17, 17, 0.18);
+      
+      --font-serif: 'Bodoni Moda', serif;
+      --font-sans: 'Space Grotesk', sans-serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    body {
+      width: 100%;
+      overflow-x: hidden;
+      background-color: var(--bg);
+    }
+
+    body.no-scroll {
+      overflow: hidden;
+      height: 100dvh;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    /* --------------------------------------------------
+       2. COVER / OPENING OVERLAY
+    -------------------------------------------------- */
+    #cover-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100dvh;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      color: #FFFFFF;
+      background: linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.7) 100%), 
+                  url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80') center/cover no-repeat;
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+    }
+
+    #cover-overlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    #cover-overlay .label-meta {
+      color: #F5F2ED;
+      letter-spacing: 0.3em;
+    }
+
+    .cover-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+
+    /* --------------------------------------------------
+       3. MUSIC FLOATING CONTROL
+    -------------------------------------------------- */
+    .music-control {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background-color: var(--text);
+      color: var(--bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      transition: transform 0.2s ease, opacity 0.5s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .music-control.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .music-control svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .music-control.playing svg {
+      animation: spin 4s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* --------------------------------------------------
+       4. SCROLL SNAP & CONTAINER UTAMA
+    -------------------------------------------------- */
+    section {
+      width: 100vw;
+      min-height: 100dvh;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2.5rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    /* --------------------------------------------------
+       5. TYPOGRAPHY & FLUID SIZES
+    -------------------------------------------------- */
+    .title-huge {
+      font-family: var(--font-serif);
+      font-size: clamp(3.2rem, 12vw, 6.5rem);
+      font-weight: 700;
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+    }
+
+    .title-large {
+      font-family: var(--font-serif);
+      font-size: clamp(2.2rem, 8vw, 4.5rem);
+      font-weight: 600;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+
+    .editorial-italic {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .label-meta {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    p.body-text {
+      font-size: clamp(1rem, 3.8vw, 1.25rem);
+      line-height: 1.5;
+      font-weight: 400;
+      max-width: 32ch;
+      letter-spacing: -0.01em;
+    }
+
+    /* --------------------------------------------------
+       6. ANIMATIONS
+    -------------------------------------------------- */
+    .reveal-up {
+      opacity: 0;
+      transform: translate3d(0, 30px, 0);
+      transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, opacity;
+    }
+
+    .reveal-scale {
+      opacity: 0;
+      transform: scale3d(0.92, 0.92, 1);
+      transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform, opacity;
+    }
+
+    .stagger-1 { transition-delay: 0.1s; }
+    .stagger-2 { transition-delay: 0.2s; }
+    .stagger-3 { transition-delay: 0.3s; }
+
+    .is-visible {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+    }
+
+    .char {
+      display: inline-block;
+      opacity: 0;
+      transform: translate3d(0, 40px, 0) rotate(3deg);
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease;
+      will-change: transform, opacity;
+    }
+
+    .hero-loaded .char {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+
+    /* --------------------------------------------------
+       7. BUTTONS
+    -------------------------------------------------- */
+    .btn-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 0 1.75rem;
+      background-color: var(--text);
+      color: var(--bg);
+      border: 1px solid var(--text);
+      border-radius: 0px;
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-action:active {
+      background-color: var(--accent);
+      border-color: var(--accent);
+      color: #FFF;
+    }
+
+    .btn-action--white {
+      background-color: #FFFFFF;
+      color: var(--text);
+      border-color: #FFFFFF;
+    }
+
+    .btn-action--outline {
+      background-color: transparent;
+      color: var(--text);
+    }
+
+    .bottom-zone {
+      margin-top: 1.5rem;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* --------------------------------------------------
+       SECTION 1: HERO (CENTER ALIGNED Vertically & Horizontally)
+    -------------------------------------------------- */
+    #hero {
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      color: #FFFFFF;
+      position: relative;
+    }
+
+    .hero-bg-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .hero-bg-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: brightness(0.55) contrast(1.1);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-names {
+      margin: 1.25rem 0;
+    }
+
+    .hero-date-badge {
+      font-size: 0.9rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border-top: 1px solid rgba(255,255,255,0.4);
+      border-bottom: 1px solid rgba(255,255,255,0.4);
+      padding: 0.6rem 1.5rem;
+      margin-top: 1rem;
+      display: inline-block;
+      color: #F5F2ED;
+    }
+
+    /* --------------------------------------------------
+       SECTION 2: OUR STORY
+    -------------------------------------------------- */
+    #story {
+      justify-content: space-between;
+    }
+
+    .story-card-grid {
+      margin: auto 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      width: 100%;
+    }
+
+    .story-image-box {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background-color: var(--surface);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .story-image-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(20%);
+    }
+
+    .story-text-card {
+      background-color: rgba(234, 230, 223, 0.5);
+      padding: 1.5rem;
+      border-left: 3px solid var(--accent);
+    }
+
+    /* --------------------------------------------------
+       SECTION 3: SAVE THE DATE (ENHANCED & FULL CONTENT)
+    -------------------------------------------------- */
+    #save-the-date {
+      justify-content: space-between;
+      text-align: center;
+      background: linear-gradient(180deg, var(--bg) 0%, var(--surface) 100%);
+    }
+
+    .date-card {
+      margin: auto 0;
+      padding: 2rem 1.25rem;
+      border: 1px solid var(--border);
+      background-color: var(--bg);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .big-day {
+      font-family: var(--font-serif);
+      font-size: clamp(5.5rem, 25vw, 10rem);
+      line-height: 0.8;
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      color: var(--accent);
+      display: block;
+      margin: 0.25rem 0;
+    }
+
+    .month-year {
+      font-family: var(--font-sans);
+      font-size: clamp(1rem, 4vw, 1.5rem);
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+    }
+
+    /* Countdown Timer Display */
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      border-top: 1px dashed var(--border);
+      border-bottom: 1px dashed var(--border);
+      padding: 1.25rem 0;
+      margin-top: 0.5rem;
+    }
+
+    .countdown-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .countdown-number {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 6vw, 2.5rem);
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .countdown-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      opacity: 0.7;
+    }
+
+    /* --------------------------------------------------
+       SECTION 4: ACARA (AKAD & RESEPSI DIGABUNG)
+    -------------------------------------------------- */
+    #acara {
+      justify-content: space-between;
+      background-color: var(--bg);
+    }
+
+    .acara-combined-card {
+      margin: auto 0;
+      width: 100%;
+      border: 1px solid var(--border);
+      background-color: var(--surface);
+      padding: 2rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.02);
+    }
+
+    .event-block {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .event-divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      position: relative;
+    }
+
+    .event-divider::after {
+      content: "✦";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: var(--surface);
+      padding: 0 0.75rem;
+      font-size: 0.8rem;
+      color: var(--accent);
+    }
+
+    .event-time {
+      font-size: 1.25rem;
+      font-family: var(--font-serif);
+      font-style: italic;
+      margin: 0.35rem 0 0.75rem 0;
+      color: var(--accent);
+    }
+
+    .event-venue {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    /* --------------------------------------------------
+       SECTION 5: GALERI FOTO
+    -------------------------------------------------- */
+    #gallery {
+      justify-content: flex-start;
+      padding-left: 0;
+      padding-right: 0;
+      background-color: var(--bg);
+    }
+
+    .gallery-header {
+      padding: 0 1.5rem 1.5rem 1.5rem;
+    }
+
+    .gallery-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+      padding: 0 1.5rem 3rem 1.5rem;
+    }
+
+    .photo-frame {
+      position: relative;
+      background-color: var(--surface);
+      overflow: hidden;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      border: 1px solid var(--border);
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      will-change: transform;
+      transition: transform 0.5s ease-out;
+    }
+
+    .photo-caption {
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.6;
+    }
+
+    /* --------------------------------------------------
+       SECTION 6: RSVP FORM
+    -------------------------------------------------- */
+    #rsvp {
+      justify-content: space-between;
+      background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+    }
+
+    .rsvp-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin: auto 0;
+      width: 100%;
+      background-color: var(--bg);
+      padding: 1.75rem 1.25rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.02);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      text-align: left;
+    }
+
+    .form-group label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-weight: 600;
+    }
+
+    .form-input {
+      width: 100%;
+      min-height: 48px;
+      padding: 0.75rem 1rem;
+      background: transparent;
+      border: 1px solid var(--text);
+      border-radius: 0;
+      color: var(--text);
+      font-size: 1rem;
+      -webkit-appearance: none;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      background-color: rgba(166, 61, 47, 0.03);
+    }
+
+    select.form-input {
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1em;
+    }
+
+    /* --------------------------------------------------
+       SECTION 7: WISHES FROM GUESTS (DITAMBAHKAN)
+    -------------------------------------------------- */
+    #wishes {
+      justify-content: space-between;
+      background-color: var(--bg);
+    }
+
+    .wishes-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+      margin: 1.5rem 0;
+      max-height: 350px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    /* Scrollbar Styling */
+    .wishes-container::-webkit-scrollbar {
+      width: 4px;
+    }
+    .wishes-container::-webkit-scrollbar-thumb {
+      background: var(--accent);
+    }
+
+    .wish-card {
+      background-color: var(--surface);
+      padding: 1.25rem;
+      border-left: 2px solid var(--accent);
+      text-align: left;
+    }
+
+    .wish-author {
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .wish-badge {
+      font-size: 0.65rem;
+      padding: 0.2rem 0.5rem;
+      background-color: var(--text);
+      color: var(--bg);
+      letter-spacing: 0.1em;
+    }
+
+    .wish-text {
+      font-size: 0.95rem;
+      line-height: 1.4;
+      opacity: 0.85;
+    }
+
+    .text-center { text-align: center; }
+  </style>
+</head>
+<body class="no-scroll">
+
+  <!-- ==================================================
+       AUDIO PLAYER & CONTROL
+  ================================================== -->
+  <audio id="bg-music" loop preload="auto">
+    <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-wedding-piano-112191.mp3" type="audio/mpeg">
+  </audio>
+
+  <button class="music-control" id="musicToggle" aria-label="Toggle Music">
+    <svg viewBox="0 0 24 24">
+      <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+    </svg>
+  </button>
+
+  <!-- ==================================================
+       COVER / OPENING OVERLAY (CENTER ALIGNED)
+  ================================================== -->
+  <div id="cover-overlay">
+    <div class="cover-content">
+      <span class="label-meta">The Wedding Invitation Of</span>
+      <h1 class="title-huge">
+        Steve<br><span class="editorial-italic">&amp;</span> Joice
+      </h1>
+      <p style="font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0.9;">
+        23 . 01 . 2027
+      </p>
+      <div class="bottom-zone" style="margin-top: 1rem;">
+        <button class="btn-action btn-action--white" id="btnOpenInvitation">
+          Buka Undangan
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================
+       1. HERO SECTION (CENTER ALIGNED VERTICALLY & HORIZONTALLY)
+  ================================================== -->
+  <section id="hero">
+    <div class="hero-bg-wrapper">
+      <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=1000&q=80" alt="Steve & Joice Background">
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-header reveal-up">
+        <span class="label-meta">The Wedding Of</span>
+      </div>
+
+      <div class="hero-names">
+        <h1 class="title-huge">
+          <span class="js-split-text">Steve</span><br>
+          <span class="editorial-italic">&amp;</span>
+          <span class="js-split-text">Joice</span>
+        </h1>
+      </div>
+
+      <div class="reveal-up stagger-2">
+        <div class="hero-date-badge">
+          23 . 01 . 2027 &mdash; JAKARTA
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================
+       2. OUR STORY SECTION
+  ================================================== -->
+  <section id="story">
+    <span class="label-meta reveal-up">Chapter 01 / Our Story</span>
+    
+    <div class="story-card-grid">
+      <div class="story-image-box reveal-scale">
+        <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=75" alt="Our Story Visual">
+      </div>
+
+      <div class="story-text-card reveal-up stagger-1">
+        <p class="body-text story-line">
+          Dua jalan yang berjalan masing-masing, melintasi waktu dan riuh dunia.
+        </p>
+        <p class="body-text story-line" style="margin-top: 0.75rem;">
+          Hingga sebuah titik temu sederhana mengubah segalanya menjadi alur yang utuh.
+        </p>
+      </div>
+
+      <p class="title-large editorial-italic reveal-up stagger-2" style="font-size: clamp(1.8rem, 6vw, 3rem); text-align: center;">
+        "We found clarity in simplicity."
+      </p>
+    </div>
+
+    <div class="bottom-zone reveal-up">
+      <span class="label-meta" style="margin:0; color:var(--text); opacity:0.5;">Swipe Down</span>
+    </div>
+  </section>
+
+  <!-- ==================================================
+       3. SAVE THE DATE (FULLY POPULATED WITH COUNTDOWN & DETAILS)
+  ================================================== -->
+  <section id="save-the-date">
+    <span class="label-meta reveal-up">Save The Date</span>
+
+    <div class="date-card reveal-scale">
+      <div>
+        <span class="month-year">Sabtu &bull; Januari</span>
+        <span class="big-day">23</span>
+        <span class="month-year">Tahun 2027</span>
+      </div>
+
+      <!-- Live Countdown Timer -->
+      <div class="countdown-grid">
+        <div class="countdown-item">
+          <span class="countdown-number" id="cd-days">00</span>
+          <span class="countdown-label">Hari</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-number" id="cd-hours">00</span>
+          <span class="countdown-label">Jam</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-number" id="cd-mins">00</span>
+          <span class="countdown-label">Menit</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-number" id="cd-secs">00</span>
+          <span class="countdown-label">Detik</span>
+        </div>
+      </div>
+
+      <p class="body-text" style="margin: 0 auto; font-size: 0.9rem; opacity: 0.8;">
+        Suatu kehormatan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
+      </p>
+    </div>
+
+    <div class="bottom-zone reveal-up">
+      <a href="data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ASUMMARY:Wedding%20of%20Steve%20%26%20Joice%0ADESCRIPTION:Akad%20%26%20Resepsi%20Steve%20%26%20Joice%20at%20Hotel%20Kempinski%20Jakarta%0ALOCATION:Hotel%20Kempinski%20Jakarta%0ADTSTART:20270123T030000Z%0ADTEND:20270123T140000Z%0AEND:VEVENT%0AEND:VCALENDAR" 
+         download="Steve-Joice-Wedding.ics" 
+         class="btn-action">
+        Simpan Ke Kalender
+      </a>
+    </div>
+  </section>
+
+  <!-- ==================================================
+       4. ACARA (AKAD & RESEPSI COMBINED INTO 1 SECTION)
+  ================================================== -->
+  <section id="acara">
+    <div class="reveal-up text-center">
+      <span class="label-meta">Schedule &amp; Venue</span>
+      <h2 class="title-large">Rangkaian Acara</h2>
+    </div>
+
+    <div class="acara-combined-card reveal-scale">
+      <!-- Section Akad -->
+      <div class="event-block">
+        <span class="label-meta" style="margin-bottom: 0.25rem;">Part I</span>
+        <h3 class="title-large" style="font-size: 1.8rem;">Akad Nikah</h3>
+        <div class="event-time">13.00 WIB &mdash; 14.30 WIB</div>
+        <p class="event-venue">Hotel Kempinski Jakarta</p>
+        <p class="body-text" style="font-size: 0.85rem;">Bali Room &mdash; Floor 1<br>Jl. M.H. Thamrin No.1, Jakarta Pusat</p>
+      </div>
+
+      <div class="event-divider"></div>
+
+      <!-- Section Resepsi -->
+      <div class="event-block">
+        <span class="label-meta" style="margin-bottom: 0.25rem;">Part II</span>
+        <h3 class="title-large" style="font-size: 1.8rem;">Resepsi</h3>
+        <div class="event-time">18.30 WIB &mdash; Selesai</div>
+        <p class="event-venue">Grand Ballroom Kempinski</p>
+        <p class="body-text" style="font-size: 0.85rem;">Dress Code: Formal / Black &amp; Neutral Tones</p>
+      </div>
+    </div>
+
+    <div class="bottom-zone reveal-up">
+      <a href="https://maps.google.com/?q=Hotel+Kempinski+Jakarta" target="_blank" rel="noopener" class="btn-action btn-action--outline">
+        Buka Google Maps
+      </a>
+    </div>
+  </section>
+
+  <!-- ==================================================
+       5. GALERI FOTO
+  ================================================== -->
+  <section id="gallery" style="min-height: auto; scroll-snap-align: center;">
+    <div class="gallery-header reveal-up" style="margin-top: 2rem;">
+      <span class="label-meta">Portraits</span>
+      <h2 class="title-large">The Gallery</h2>
+    </div>
+
+    <div class="gallery-stack">
+      <div>
+        <div class="photo-frame reveal-scale">
+          <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=75" 
+               alt="Steve & Joice Portrait 1" 
+               loading="lazy"
+               width="800" 
+               height="1000"
+               class="js-parallax-img">
+        </div>
+        <p class="photo-caption text-center">Frame I &mdash; Moments</p>
+      </div>
+
+      <div>
+        <div class="photo-frame reveal-scale">
+          <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=75" 
+               alt="Steve & Joice Portrait 2" 
+               loading="lazy"
+               width="800" 
+               height="1000"
+               class="js-parallax-img">
+        </div>
+        <p class="photo-caption text-center">Frame II &mdash; Togetherness</p>
+      </div>
+
+      <div>
+        <div class="photo-frame reveal-scale">
+          <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=75" 
+               alt="Steve & Joice Portrait 3" 
+               loading="lazy"
+               width="800" 
+               height="1000"
+               class="js-parallax-img">
+        </div>
+        <p class="photo-caption text-center">Frame III &mdash; Promises</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================
+       6. RSVP FORM
+  ================================================== -->
+  <section id="rsvp">
+    <div class="reveal-up text-center">
+      <span class="label-meta">R.S.V.P</span>
+      <h2 class="title-large">Konfirmasi Kehadiran</h2>
+    </div>
+
+    <form class="rsvp-form reveal-up stagger-1" id="weddingRSVP" onsubmit="handleRSVP(event)">
+      <div class="form-group">
+        <label for="nama">Nama Lengkap</label>
+        <input type="text" id="nama" class="form-input" required placeholder="Contoh: Alex Sugiono">
+      </div>
+
+      <div class="form-group">
+        <label for="kehadiran">Konfirmasi</label>
+        <select id="kehadiran" class="form-input" required>
+          <option value="Hadir">Ya, Saya Akan Hadir</option>
+          <option value="Tidak Hadir">Maaf, Saya Tidak Bisa Hadir</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="jumlah">Jumlah Tamu</label>
+        <select id="jumlah" class="form-input">
+          <option value="1">1 Orang</option>
+          <option value="2">2 Orang</option>
+        </select>
+      </div>
+
+      <div class="bottom-zone" style="margin-top: 1rem;">
+        <button type="submit" class="btn-action" id="btnSubmit">Kirim Konfirmasi</button>
+      </div>
+    </form>
+
+    <div class="reveal-up text-center" style="margin-bottom: 0.5rem;">
+      <span class="label-meta" style="color:var(--text); opacity:0.4; margin:0;">Swipe Down For Wishes</span>
+    </div>
+  </section>
+
+  <!-- ==================================================
+       7. WISHES FROM GUESTS (SECTION PALING BAHAW)
+  ================================================== -->
+  <section id="wishes">
+    <div class="reveal-up text-center">
+      <span class="label-meta">Warm Wishes</span>
+      <h2 class="title-large">Doa &amp; Ucapan</h2>
+    </div>
+
+    <!-- Form Tambah Ucapan Singkat -->
+    <div class="reveal-up stagger-1" style="width: 100%; max-width: 500px; margin: 0 auto;">
+      <div class="form-group" style="gap: 0.5rem;">
+        <input type="text" id="wishName" class="form-input" placeholder="Nama Anda" style="min-height: 40px; font-size: 0.9rem;">
+        <textarea id="wishText" class="form-input" rows="2" placeholder="Tuliskan ucapan & doa Anda..." style="font-size: 0.9rem;"></textarea>
+        <button type="button" class="btn-action" onclick="addWish()" style="min-height: 42px; font-size: 0.75rem;">Kirim Ucapan</button>
+      </div>
+    </div>
+
+    <!-- Daftar Ucapan Tamu -->
+    <div class="wishes-container reveal-up stagger-2" id="wishesList">
+      <div class="wish-card">
+        <div class="wish-author">
+          <span>Budi &amp; Siska</span>
+          <span class="wish-badge">Hadir</span>
+        </div>
+        <p class="wish-text">Selamat untuk Steve & Joice! Semoga menjadi keluarga yang selalu diliputi kebahagiaan dan cinta selamanya.</p>
+      </div>
+
+      <div class="wish-card">
+        <div class="wish-author">
+          <span>Clarissa P.</span>
+          <span class="wish-badge">Hadir</span>
+        </div>
+        <p class="wish-text">Happy Wedding! So happy for both of you. Wishing you a lifetime of love and joy!</p>
+      </div>
+
+      <div class="wish-card">
+        <div class="wish-author">
+          <span>Daniel</span>
+          <span class="wish-badge">Tidak Hadir</span>
+        </div>
+        <p class="wish-text">Selamat Steve & Joice! Mohon maaf belum bisa hadir langsung, tapi doa terbaik selalu untuk kalian berdua.</p>
+      </div>
+    </div>
+
+    <div class="reveal-up text-center" style="margin-bottom: 0.5rem;">
+      <p class="label-meta" style="color:var(--text); opacity:0.4;">Steve &amp; Joice &mdash; 2027</p>
+    </div>
+  </section>
+
+  <!-- ==================================================
+       JAVA SCRIPT
+  ================================================== -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      
+      /* 1. Safe Text Splitter */
+      const splitTargets = document.querySelectorAll('.js-split-text');
+      splitTargets.forEach(target => {
+        const text = target.textContent.trim();
+        target.innerHTML = '';
+        for (let char of text) {
+          const span = document.createElement('span');
+          span.className = 'char';
+          span.textContent = char === ' ' ? '\u00A0' : char;
+          target.appendChild(span);
+        }
+      });
+
+      /* 2. Audio & Opening Cover Overlay Handler */
+      const btnOpen = document.getElementById('btnOpenInvitation');
+      const coverOverlay = document.getElementById('cover-overlay');
+      const bgMusic = document.getElementById('bg-music');
+      const musicToggle = document.getElementById('musicToggle');
+      let isPlaying = false;
+
+      btnOpen.addEventListener('click', () => {
+        document.body.classList.remove('no-scroll');
+        coverOverlay.classList.add('hidden');
+
+        bgMusic.play().then(() => {
+          isPlaying = true;
+          musicToggle.classList.add('playing');
+        }).catch(err => {
+          console.log("Autoplay blocked/failed:", err);
+        });
+
+        musicToggle.classList.add('visible');
+
+        requestAnimationFrame(() => {
+          document.body.classList.add('hero-loaded');
+        });
+      });
+
+      musicToggle.addEventListener('click', () => {
+        if (isPlaying) {
+          bgMusic.pause();
+          musicToggle.classList.remove('playing');
+        } else {
+          bgMusic.play();
+          musicToggle.classList.add('playing');
+        }
+        isPlaying = !isPlaying;
+      });
+
+      /* 3. Intersection Observer */
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px 0px -10% 0px',
+        threshold: 0.15
+      };
+
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      const revealElements = document.querySelectorAll('.reveal-up, .reveal-scale');
+      revealElements.forEach(el => revealObserver.observe(el));
+
+      /* 4. Parallax */
+      const parallaxImages = document.querySelectorAll('.js-parallax-img');
+      let ticking = false;
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            parallaxImages.forEach(img => {
+              const rect = img.getBoundingClientRect();
+              const windowHeight = window.innerHeight;
+              if (rect.top < windowHeight && rect.bottom > 0) {
+                const speed = 0.08;
+                const yPos = (rect.top - windowHeight / 2) * speed;
+                img.style.transform = `translate3d(0, ${yPos}px, 0) scale(1.08)`;
+              }
+            });
+            ticking = false;
+          });
+          ticking = true;
+        }
+      }, { passive: true });
+
+      /* 5. Countdown Timer */
+      const targetDate = new Date("Jan 23, 2027 13:00:00").getTime();
+      
+      const countdownInterval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        if (distance < 0) {
+          clearInterval(countdownInterval);
+          document.getElementById("cd-days").innerText = "00";
+          document.getElementById("cd-hours").innerText = "00";
+          document.getElementById("cd-mins").innerText = "00";
+          document.getElementById("cd-secs").innerText = "00";
+          return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        document.getElementById("cd-days").innerText = days < 10 ? "0" + days : days;
+        document.getElementById("cd-hours").innerText = hours < 10 ? "0" + hours : hours;
+        document.getElementById("cd-mins").innerText = minutes < 10 ? "0" + minutes : minutes;
+        document.getElementById("cd-secs").innerText = seconds < 10 ? "0" + seconds : seconds;
+      }, 1000);
+
+    });
+
+    /* 6. RSVP Form Handler */
+    function handleRSVP(event) {
+      event.preventDefault();
+      const btn = document.getElementById('btnSubmit');
+      const nama = document.getElementById('nama').value;
+      
+      btn.innerText = "TERKIRIM. TERIMA KASIH!";
+      btn.style.backgroundColor = "var(--accent)";
+      btn.style.color = "#FFF";
+      btn.disabled = true;
+
+      setTimeout(() => {
+        alert(`Terima kasih, ${nama}! Konfirmasi Anda telah kami terima.`);
+      }, 100);
+    }
+
+    /* 7. Add Wish Dynamic Function */
+    function addWish() {
+      const nameInput = document.getElementById('wishName');
+      const textInput = document.getElementById('wishText');
+      const list = document.getElementById('wishesList');
+
+      if (!nameInput.value.trim() || !textInput.value.trim()) {
+        alert("Silakan isi nama dan ucapan Anda.");
+        return;
+      }
+
+      const card = document.createElement('div');
+      card.className = 'wish-card';
+      card.innerHTML = `
+        <div class="wish-author">
+          <span>${nameInput.value.trim()}</span>
+          <span class="wish-badge">Tamu</span>
+        </div>
+        <p class="wish-text">${textInput.value.trim()}</p>
+      `;
+
+      list.prepend(card);
+      nameInput.value = '';
+      textInput.value = '';
+    }
+  </script>
+</body>
+</html>
